@@ -5,6 +5,7 @@ import (
 
 	"school-management/config"
 	"school-management/models"
+	"school-management/seed"
 )
 
 func main() {
@@ -18,6 +19,7 @@ func main() {
 		&models.User{},
 		&models.EducationLevel{},
 		&models.Class{},
+		&models.Subject{},
 	)
 
 	if err != nil {
@@ -26,5 +28,12 @@ func main() {
 	}
 
 	fmt.Println("AutoMigrate berhasil!")
+
+	fmt.Println("Menjalankan Seeder...")
+
+	seed.SeedEducationLevels()
+	seed.SeedClasses()
+
+	fmt.Println("Seeder berhasil dijalankan!")
 	fmt.Println("Backend LMS berhasil dijalankan!")
 }
