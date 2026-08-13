@@ -20,6 +20,12 @@ func main() {
 		&models.EducationLevel{},
 		&models.Class{},
 		&models.Subject{},
+		&models.Teacher{},
+		&models.Student{},
+		&models.ClassSubject{},
+		&models.TeacherSubject{},
+		&models.Material{},
+		&models.Assignment{},
 	)
 
 	if err != nil {
@@ -35,5 +41,6 @@ func main() {
 	seed.SeedClasses()
 
 	fmt.Println("Seeder berhasil dijalankan!")
+
 	fmt.Println("Backend LMS berhasil dijalankan!")
 }
