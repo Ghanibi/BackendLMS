@@ -21,5 +21,5 @@ func ConnectDatabase() {
 
 	DB = database
 
-	fmt.Println("Database berhasil terhubung!!")
+	fmt.Println("Database berhasil terhubung!")
 }
