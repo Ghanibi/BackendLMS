@@ -1,20 +1,21 @@
 package main
 
 import (
-	"fmt"
-
+	"log"
 	"school-management/config"
 	"school-management/models"
+	"school-management/routes"
 	"school-management/seed"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	fmt.Println("Menjalankan Backend LMS...")
-
+	// 1. Hubungkan ke Database
 	config.ConnectDatabase()
 
-	fmt.Println("Menjalankan AutoMigrate...")
-
+	// 2. AutoMigrate semua model
+	log.Println("Menjalankan AutoMigrate...")
 	err := config.DB.AutoMigrate(
 		&models.User{},
 		&models.EducationLevel{},
@@ -26,21 +27,33 @@ func main() {
 		&models.TeacherSubject{},
 		&models.Material{},
 		&models.Assignment{},
+		&models.AssignmentSubmission{},
+		&models.Exam{},
+		&models.ExamQuestion{},
+		&models.ExamAnswer{},
+		&models.Grade{},
+		&models.Announcement{},
+		&models.Notification{},
+		&models.AcademicEvent{},
 	)
-
 	if err != nil {
-		fmt.Println("Gagal melakukan AutoMigrate:", err)
-		return
+		log.Fatalf("Gagal melakukan AutoMigrate: %v", err)
 	}
+	log.Println("AutoMigrate berhasil.")
 
-	fmt.Println("AutoMigrate berhasil!")
-
-	fmt.Println("Menjalankan Seeder...")
-
+	// 3. Jalankan Seeder
 	seed.SeedEducationLevels()
 	seed.SeedClasses()
+	seed.SeedUsers() // Seeder user akan membuat admin dengan password ter-hash
 
-	fmt.Println("Seeder berhasil dijalankan!")
+	// 4. Setup Gin Server
+	router := gin.Default()
 
-	fmt.Println("Backend LMS berhasil dijalankan!")
+	// Daftarkan routes
+	routes.AuthRoutes(router)
+	routes.UserRoutes(router) // Tambahkan baris ini
+
+	// Jalankan server
+	log.Println("Server berjalan di http://localhost:8080")
+	router.Run(":8080")
 }
